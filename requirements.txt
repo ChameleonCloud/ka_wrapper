@@ -1,0 +1,8 @@
+# kolla ansible checkout
+https://github.com/chameleoncloud/kolla-ansible@backport/train
+
+ansible>=2.6,<=2.9  # compatibility for train release
+jinja2<3.1
+
+openstackclient
+tempest

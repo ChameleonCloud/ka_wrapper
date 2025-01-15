@@ -1,0 +1,6 @@
+.venv
+container_lists
+tempest
+
+site_config/passwords.yml
+**/*openrc.sh
