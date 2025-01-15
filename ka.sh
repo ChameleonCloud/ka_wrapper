@@ -4,18 +4,16 @@ set -euo pipefail
 
 source .venv/bin/activate
 
-# KA_ANSIBLE_DIR=.venv/share/kolla-ansible/ansible/
-# export ANSIBLE_ACTION_PLUGINS="$KA_ANSIBLE_DIR/action_plugins"
-# export ANSIBLE_FILTER_PLUGINS="$KA_ANSIBLE_DIR/filter_plugins"
-# export ANSIBLE_ROLES_PATH="$KA_ANSIBLE_DIR/roles"
-# export ANSIBLE_LIBRARY="$KA_ANSIBLE_DIR/library"
-
 
 declare -a POSARGS=()
 
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
+        -s|--site)
+            CC_ANSIBLE_SITE="$(realpath "$2")"
+            shift # Past arg
+            ;;
         *)
             POSARGS+=($key)
             ;;
@@ -33,11 +31,10 @@ if [[ ! "${POSARGS[@]}" =~ bootstrap-servers ]]; then
     kolla_args+=(--extra ansible_python_interpreter="/opt/kolla/venv/bin/python")
 fi
 
-
 # need to pass full path or openrc fails
 kolla_args+=("${POSARGS[@]}")
 kolla-ansible \
-    --inventory /home/ubuntu/ka_native/site_config/all-in-one \
-    --configdir /home/ubuntu/ka_native/site_config/config \
-    --passwords /home/ubuntu/ka_native/site_config/passwords.yml \
+    --configdir "${CC_ANSIBLE_SITE}" \
+    --inventory "${CC_ANSIBLE_SITE}/all-in-one" \
+    --passwords "${CC_ANSIBLE_SITE}/passwords.yml" \
     "${kolla_args[@]}"

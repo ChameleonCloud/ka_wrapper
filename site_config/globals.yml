@@ -1,18 +1,16 @@
 ---
-
-# our globals.yml is in the "config" dir under our site config
-# CONFIG_DIR is set by --configdir
-site_config_base: "{{ CONFIG_DIR }}/.."
-
 # The directory on the deploy host containing globals.yml.
-# this is part of our site config
+# this is also the base of our of our site config dir
+# CONFIG_DIR is set by --configdir
 node_config: "{{ CONFIG_DIR }}"
 
 # The directory to merge custom config files the kolla's config files
-node_custom_config: "{{ CONFIG_DIR }}../node_custom_config"
+node_custom_config: "{{ CONFIG_DIR }}/node_custom_config"
 
 # The directory to store the config files on the destination node
 node_config_directory: "/opt/kolla/config"
+
+# target virtualenv directory
 virtualenv: /opt/kolla/venv
 
 # The group which own node_config_directory, you can use a non-root
