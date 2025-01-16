@@ -39,3 +39,6 @@ kolla_external_vip_address: 10.0.100.254
 
 # might need to set this in group/host-vars instead
 neutron_external_interface: ens7
+
+# for kvm on kvm
+nova_compute_virt_type: qemu
