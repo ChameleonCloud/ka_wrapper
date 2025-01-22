@@ -27,8 +27,8 @@ declare -a kolla_args=()
 
 # if we're running bootstrap_servers, we use the default python interpereter
 # if we're NOT, then use python from the venv created by bootstrap_servers
-if [[ ! "${POSARGS[@]}" =~ bootstrap-servers ]]; then
-    kolla_args+=(--extra ansible_python_interpreter="/opt/kolla/venv/bin/python")
+if [[ "${POSARGS[@]}" =~ bootstrap-servers ]]; then
+    kolla_args+=(--extra ansible_python_interpreter="python3")
 fi
 
 # need to pass full path or openrc fails

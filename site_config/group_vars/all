@@ -1,2 +1,14 @@
 ---
 dummy_var_for_ansible: "foo" # ansible will fail if this file exists but is empty...
+
+# base OS to use, define here so it can be overridden per host
+kolla_base_distro: ubuntu
+
+# The directory to store the config files on the destination node
+# applies to all target hosts (compute, control, ...)
+node_config_directory: "/opt/kolla/config"
+
+# target virtualenv directory and python interpreter
+# applies to all target hosts (compute, control, ...)
+virtualenv: /opt/kolla/venv
+ansible_python_interpreter: /opt/kolla/venv/bin/python3
