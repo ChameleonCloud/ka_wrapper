@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-source .venv/bin/activate
-
 
 declare -a POSARGS=()
 
@@ -11,7 +9,11 @@ while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
         -s|--site)
-            CC_ANSIBLE_SITE="$(realpath "$2")"
+            KA_SITE_ARG="$(realpath "$2")"
+            shift # Past arg
+            ;;
+        -i|--inventory)
+            KA_INVENTORY_ARG="$(realpath "$2")"
             shift # Past arg
             ;;
         *)
@@ -21,6 +23,10 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+# if args are passed, override env vars
+KA_SITE=${KA_SITE_ARG:-$KA_SITE}
+KA_INVENTORY=${KA_INVENTORY_ARG:-$KA_INVENTORY}
+
 
 # modify positional args to pass to kolla ansible
 declare -a kolla_args=()
@@ -28,13 +34,16 @@ declare -a kolla_args=()
 # if we're running bootstrap_servers, we use the default python interpereter
 # if we're NOT, then use python from the venv created by bootstrap_servers
 if [[ "${POSARGS[@]}" =~ bootstrap-servers ]]; then
-    kolla_args+=(--extra ansible_python_interpreter="python3")
+    kolla_args+=(--extra ansible_python_interpreter="python")
 fi
+
+# disable initial host key checking
+export ANSIBLE_HOST_KEY_CHECKING=false
 
 # need to pass full path or openrc fails
 kolla_args+=("${POSARGS[@]}")
 kolla-ansible \
-    --configdir "${CC_ANSIBLE_SITE}" \
-    --inventory "${CC_ANSIBLE_SITE}/all-in-one" \
-    --passwords "${CC_ANSIBLE_SITE}/passwords.yml" \
+    --configdir "${KA_SITE}" \
+    --inventory "${KA_INVENTORY}" \
+    --passwords "${KA_SITE}/passwords.yml" \
     "${kolla_args[@]}"
