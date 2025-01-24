@@ -1,0 +1,5 @@
+---
+# python interpreter to use after bootstrap-servers is done
+ansible_python_interpreter: /opt/kolla/venv/bin/python3
+
+kolla_base_distro: ubuntu
